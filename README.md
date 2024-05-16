@@ -1,4 +1,6 @@
-# Blowfish Local Blocklists
+# SuiSec Local Blocklists
+
+Fork the [repository](https://github.com/blowfishxyz/blocklist) from [Blowfish](https://blowfish.xyz/) and respect their work.
 
 This is a Javascript/Typescript library that makes it easy to access the Blowfish Local Blocklist API: for example, to fetch the blocklist object from API, scan a domain against the blocklist and saved bloom filter.
 
