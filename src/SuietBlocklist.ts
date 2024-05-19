@@ -3,9 +3,22 @@ import {
   BlocklistStorage,
   DomainBlocklist,
   Action,
+  PackageBlocklist,
+  ObjectBlocklist,
+  CoinBlocklist,
 } from "./types";
 import { InMemoryStorage } from "./inMemoryStorage";
-import { fetchDomainBlocklist, scanDomain, withRetry } from "./utils";
+import {
+  fetchDomainBlocklist,
+  scanDomain,
+  withRetry,
+  fetchPackageBlocklist,
+  scanPackage,
+  fetchObjectBlocklist,
+  scanObject,
+  fetchCoinBlocklist,
+  scanCoin,
+} from "./utils";
 
 const logger =
   process.env.NODE_ENV === "production"
@@ -22,27 +35,13 @@ export class SuietBlocklist {
     }
   ) {}
 
-  async fetchBlocklist(): Promise<void> {
-    logger("fetchBlocklist start");
+  async fetchDomainlist(): Promise<void> {
+    logger("fetchDomainlist start");
     const domainBlocklist = await fetchDomainBlocklist();
-    logger("fetchBlocklist fetched", domainBlocklist);
-
-    const storedDomainBlocklist = await this.storage.getItem<DomainBlocklist>(
-      BlocklistStorageKey.DomainBlocklist
-    );
-    logger("fetchBlocklist storage", storedDomainBlocklist);
-
-    if (storedDomainBlocklist) {
-      await this.storage.setItem(
-        BlocklistStorageKey.DomainBlocklist,
-        domainBlocklist
-      );
-
-      return;
-    }
+    logger("fetchDomainlist fetched", domainBlocklist);
 
     if (!domainBlocklist) {
-      logger("fetchBlocklist fail 1 domainBlocklist");
+      logger("fetchDomainlist fail 1 domainBlocklist");
       this.reportError(new Error("Failed to fetch blocklist"));
       return;
     }
@@ -51,7 +50,7 @@ export class SuietBlocklist {
       BlocklistStorageKey.DomainBlocklist,
       domainBlocklist
     );
-    logger("fetchBlocklist success ", domainBlocklist);
+    logger("fetchDomainlist success ", domainBlocklist);
   }
 
   async allowDomainLocally(domain: string) {
@@ -75,7 +74,7 @@ export class SuietBlocklist {
     logger("scanDomain fetch 1", storedDomainBlocklist);
 
     if (!storedDomainBlocklist) {
-      await withRetry(() => this.fetchBlocklist(), 3);
+      await withRetry(() => this.fetchDomainlist(), 3);
       storedDomainBlocklist = await this.storage.getItem<DomainBlocklist>(
         BlocklistStorageKey.DomainBlocklist
       );
@@ -105,6 +104,150 @@ export class SuietBlocklist {
     }
 
     logger("scanDomain action", action);
+
+    return action;
+  }
+
+  async fetchPackagelist(): Promise<void> {
+    logger("fetchPackagelist start");
+    const packageBlocklist = await fetchPackageBlocklist();
+    logger("fetchPackagelist fetched", packageBlocklist);
+
+    if (!packageBlocklist) {
+      logger("fetchPackagelist fail 1 packageBlocklist");
+      this.reportError(new Error("Failed to fetch packagelist"));
+      return;
+    }
+
+    await this.storage.setItem(
+      BlocklistStorageKey.PackageBlocklist,
+      packageBlocklist
+    );
+    logger("fetchpackagelist success ", packageBlocklist);
+  }
+
+  async scanPackage(address: string): Promise<Action> {
+    logger("scanPackage start");
+    let storedPackageBlocklist = await this.storage.getItem<PackageBlocklist>(
+      BlocklistStorageKey.PackageBlocklist
+    );
+
+    logger("scanPackage fetch 1", storedPackageBlocklist);
+
+    if (!storedPackageBlocklist) {
+      await withRetry(() => this.fetchPackagelist(), 3);
+      storedPackageBlocklist = await this.storage.getItem<PackageBlocklist>(
+        BlocklistStorageKey.PackageBlocklist
+      );
+      logger("scanPackage fetch 2", storedPackageBlocklist);
+    }
+
+    if (!storedPackageBlocklist) {
+      logger("scanPackage error", storedPackageBlocklist);
+      this.reportError(new Error("Failed to fetch blocklist"));
+      // Note(metreniuk): should we fail silently here?
+      return Action.NONE;
+    }
+
+    const action = scanPackage(storedPackageBlocklist.blocklist, address);
+
+    logger("scanPackage action", action);
+
+    return action;
+  }
+
+  async fetchObjectlist(): Promise<void> {
+    logger("fetchObjectlist start");
+    const objectBlocklist = await fetchObjectBlocklist();
+    logger("fetchObjectlist fetched", objectBlocklist);
+
+    if (!objectBlocklist) {
+      logger("fetchObjectlist fail 1 objectBlocklist");
+      this.reportError(new Error("Failed to fetch objectlist"));
+      return;
+    }
+
+    await this.storage.setItem(
+      BlocklistStorageKey.ObjectBlocklist,
+      objectBlocklist
+    );
+    logger("fetchobjectlist success ", objectBlocklist);
+  }
+
+  async scanObject(object: string): Promise<Action> {
+    logger("scanObject start");
+    let storedObjectBlocklist = await this.storage.getItem<ObjectBlocklist>(
+      BlocklistStorageKey.ObjectBlocklist
+    );
+
+    logger("scanObject fetch 1", storedObjectBlocklist);
+
+    if (!storedObjectBlocklist) {
+      await withRetry(() => this.fetchObjectlist(), 3);
+      storedObjectBlocklist = await this.storage.getItem<ObjectBlocklist>(
+        BlocklistStorageKey.ObjectBlocklist
+      );
+      logger("scanObject fetch 2", storedObjectBlocklist);
+    }
+
+    if (!storedObjectBlocklist) {
+      logger("scanObject error", storedObjectBlocklist);
+      this.reportError(new Error("Failed to fetch blocklist"));
+      // Note(metreniuk): should we fail silently here?
+      return Action.NONE;
+    }
+
+    const action = scanObject(storedObjectBlocklist.blocklist, object);
+
+    logger("scanObject action", action);
+
+    return action;
+  }
+
+  async fetchCoinlist(): Promise<void> {
+    logger("fetchCoinlist start");
+    const coinBlocklist = await fetchCoinBlocklist();
+    logger("fetchCoinlist fetched", coinBlocklist);
+
+    if (!coinBlocklist) {
+      logger("fetchCoinlist fail 1 coinBlocklist");
+      this.reportError(new Error("Failed to fetch coinlist"));
+      return;
+    }
+
+    await this.storage.setItem(
+      BlocklistStorageKey.CoinBlocklist,
+      coinBlocklist
+    );
+    logger("fetchcoinlist success ", coinBlocklist);
+  }
+
+  async scanCoin(coin: string): Promise<Action> {
+    logger("scanCoin start");
+    let storedCoinBlocklist = await this.storage.getItem<CoinBlocklist>(
+      BlocklistStorageKey.CoinBlocklist
+    );
+
+    logger("scanCoin fetch 1", storedCoinBlocklist);
+
+    if (!storedCoinBlocklist) {
+      await withRetry(() => this.fetchCoinlist(), 3);
+      storedCoinBlocklist = await this.storage.getItem<CoinBlocklist>(
+        BlocklistStorageKey.CoinBlocklist
+      );
+      logger("scanCoin fetch 2", storedCoinBlocklist);
+    }
+
+    if (!storedCoinBlocklist) {
+      logger("scanCoin error", storedCoinBlocklist);
+      this.reportError(new Error("Failed to fetch blocklist"));
+      // Note(metreniuk): should we fail silently here?
+      return Action.NONE;
+    }
+
+    const action = scanCoin(storedCoinBlocklist.blocklist, coin);
+
+    logger("scanCoin action", action);
 
     return action;
   }
