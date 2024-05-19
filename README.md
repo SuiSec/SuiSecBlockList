@@ -2,21 +2,19 @@
 
 Fork the [repository](https://github.com/blowfishxyz/blocklist) from [Blowfish](https://blowfish.xyz/) and respect their work.
 
-This is a Javascript/Typescript library that makes it easy to access the Blowfish Local Blocklist API: for example, to fetch the blocklist object from API, scan a domain against the blocklist and saved bloom filter.
+This is a Javascript/Typescript library that makes it easy to access the [Suiet Guardians](https://github.com/suiet/guardians): for example, scan a domain against the domain-list.
 
 It's designed to support React Native, Chrome Extension and Node.js environments.
 
 ## Install
 
 ```bash
-npm install @blowfishxyz/blocklist
+npm install suisecblocklist
 ```
-
-It's also recommended for React Native apps to install `react-native-url-polyfill`.
 
 ## Usage
 
-In order to execute lookups, you need to fetch a **blocklist object** and **bloom filter**.
+In order to execute lookups, you need to fetch a **domainlist packagelist objectlist coinlist**.
 After the first fetch, you should keep these objects updated. You can save the objects in a local database
 (for example, using local storage in Chrome extension).
 
@@ -25,52 +23,56 @@ We recommend updating it every 5 minutes.
 ### Basic usage
 
 ```javascript
-import {
-  BlowfishLocalBlocklist,
-  ApiConfig,
-  BLOWFISH_API_BASE_URL,
-} from "@blowfishxyz/blocklist";
+import { SuietBlocklist } from "suisecblocklist";
 
-const apiConfig: ApiConfig = {
-  basePath: BLOWFISH_API_BASE_URL,
-  // It's highly encouraged to use a proxy server to not expose your API key on the client (see: https://docs.blowfish.xyz/docs/wallet-integration-guide#optional-proxy-server).
-  // When using a proxy server, replace basePath with your endpoint and set apiKey to `undefined`.
-  apiKey: "you-api-key",
-};
-const blocklist = new BlowfishLocalBlocklist(apiConfig);
+const blocklist = new SuietBlocklist();
 
-// 1. Fetch the blocklist and persist it in the storage
-blocklist.fetchBlocklist();
+// 1. Fetch the domainlist and persist it in the storage
+blocklist.fetchDomainlist();
 
-// 2. Re-refetch the blocklist every 5 minutes
-setInterval(() => blocklist.fetchBlocklist(), 1000 * 60 * 5);
+// 2. Re-refetch the domainlist every 5 minutes
+setInterval(() => blocklist.fetchDomainlist(), 1000 * 60 * 5);
 
-// 3. Once you have a blocklist object and a bloom filter saved, you can execute lookups
+// 3. Once you have a domainlist object saved, you can execute lookups
 const action = blocklist.scanDomain("https://scam-website.io");
 
 if (action === Action.BLOCK) {
   // block the domain
 }
+
+// 4. Fetch the packjectlist and persist it in the storage, Once you have a packjectlist object saved, you can execute lookups
+blocklist.fetchPackagelist();
+
+const action = blocklist.scanPackject("0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4");
+
+if (action === Action.BLOCK) {
+  // block the packject
+}
+
+// 5. Fetch the objectlist and persist it in the storage, Once you have a objectlist object saved, you can execute lookups
+blocklist.fetchObjectlist();
+
+const action = blocklist.scanObject("0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4::my_hero::Hero");
+
+if (action === Action.BLOCK) {
+  // block the domain
+}
+
+// 6. Fetch the coinlist and persist it in the storage, Once you have a coinlist object saved, you can execute lookups
+blocklist.fetchCoinlist();
+
+const action = blocklist.scanCoin("0x043a9bd4cd74f93e861b8a3138a373e726bb1f7bf8f4f38cde4872f0234ed20b::usdt::USDT");
+
+if (action === Action.BLOCK) {
+  // block the coin
+}
 ```
-
-You can skip `apiKey` and pass custom `basePath` to route the query to your backend app or a proxy.
-
-### Bloom filter
-
-Blocklist object links to a bloom filter. However, bloom filter is a 700 KB file, so your app should only
-re-download it when nessesary.
-
-To do that, we are tracking bloom filter's hash and re-fetching it if necessary.
-
-Then, we save the bloom filter object itself and its hash to the `storage`.
-
-We don't update blocklist hash more often than every 24 hours.
 
 ### Error handling
 
 Functions that depend on API an/or network can return `null` when I/O errors are encountered.
 
-If you would like to track errors, you can pass optional `reportError` callback to `BlowfishLocalBlocklist` constructor.
+If you would like to track errors, you can pass optional `reportError` callback to `SuietBlocklist` constructor.
 
 It could be called with an `Error` or with a string.
 
@@ -81,7 +83,7 @@ It could be called with an `Error` or with a string.
 1. Install Necessary Dependencies:
 
 ```bash
-npm install @blowfishxyz/blocklist webextension-polyfill
+npm install suisecblocklist webextension-polyfill
 ```
 
 2. Create Blocklist Module:
@@ -89,30 +91,25 @@ npm install @blowfishxyz/blocklist webextension-polyfill
 ```typescript
 // src/blocklist.ts
 import {
-  BlowfishLocalBlocklist,
-  BlowfishBlocklistStorageKey,
-  BlowfishBlocklistStorage,
-  BLOWFISH_API_BASE_URL,
-} from "@blowfishxyz/blocklist";
+  SuietBlocklist,
+  BlocklistStorageKey,
+  BlocklistStorage,
+} from "suisecblocklist";
 
-const storage: BlowfishBlocklistStorage = {
-  async getItem<T>(key: BlowfishBlocklistStorageKey) {
+const storage: BlocklistStorage = {
+  async getItem<T>(key: BlocklistStorageKey) {
     const storage = chrome.storage.local.get([key]);
     return storage[key] as T | undefined;
   },
-  async setItem(key: BlowfishBlocklistStorageKey, data: unknown) {
+  async setItem(key: BlocklistStorageKey, data: unknown) {
     return chrome.storage.local.set({
       [key]: data,
     });
   },
 };
 
-export const blocklist = new BlowfishLocalBlocklist(
-  { basePath: BLOWFISH_API_BASE_URL, apiKey: undefined },
-  undefined,
-  storage
-);
-export { Action } from "@blowfishxyz/blocklist";
+export const blocklist = new SuietBlocklist();
+export { Action } from "suisecblocklist";
 ```
 
 3. Schedule Blocklist Updates:
@@ -123,12 +120,12 @@ import Browser from "webextension-polyfill";
 import { blocklist } from "./blocklist";
 
 Browser.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "refetch-blocklist") {
-    blocklist.fetchBlocklist();
+  if (alarm.name === "refetch-domainlist") {
+    blocklist.fetchDomainlist();
   }
 });
 
-Browser.alarms.create("refetch-blocklist", {
+Browser.alarms.create("refetch-domainlist", {
   periodInMinutes: 5,
   delayInMinutes: 0,
 });
@@ -168,7 +165,7 @@ function proceedToBlockedDomainButtonClickHandler() {
 1. Install Necessary Dependencies:
 
 ```bash
-npm install @blowfishxyz/blocklist react-native-async-storage react-native-background-timer react-native-url-polyfill
+npm install suisecblocklist react-native-async-storage react-native-background-timer react-native-url-polyfill
 ```
 
 2. Create Blocklist Module:
@@ -176,32 +173,27 @@ npm install @blowfishxyz/blocklist react-native-async-storage react-native-backg
 ```typescript
 // src/blocklist.ts
 import {
-  BlowfishLocalBlocklist,
-  BlowfishBlocklistStorageKey,
-  BlowfishBlocklistStorage,
-  BLOWFISH_API_BASE_URL,
-} from "@blowfishxyz/blocklist";
+  SuietBlocklist,
+  BlocklistStorageKey,
+  BlocklistStorage,
+} from "suisecblocklist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const storage: BlowfishBlocklistStorage = {
-  async getItem<T>(key: BlowfishBlocklistStorageKey): Promise<T | undefined> {
+const storage: BlocklistStorage = {
+  async getItem<T>(key: BlocklistStorageKey): Promise<T | undefined> {
     const data = await AsyncStorage.getItem(key);
     return data ? (JSON.parse(data) as T) : undefined;
   },
   async setItem(
-    key: BlowfishBlocklistStorageKey,
+    key: BlocklistStorageKey,
     data: unknown
   ): Promise<void> {
     await AsyncStorage.setItem(key, JSON.stringify(data));
   },
 };
 
-export const blocklist = new BlowfishLocalBlocklist(
-  { basePath: BLOWFISH_API_BASE_URL, apiKey: undefined },
-  undefined,
-  storage
-);
-export { Action } from "@blowfishxyz/blocklist";
+export const blocklist = new SuietBlocklist();
+export { Action } from "suisecblocklist";
 ```
 
 3. Schedule Blocklist Updates:
@@ -213,14 +205,14 @@ import BackgroundTimer from "react-native-background-timer";
 
 let intervalId;
 
-const refetchBlocklist = () => {
-  blocklist.fetchBlocklist();
+const refetchDomainlist = () => {
+  blocklist.fetchDomainlist();
 };
-export const startBlocklistRefetch = () => {
-  intervalId = BackgroundTimer.setInterval(refetchBlocklist, 5 * 60 * 60);
+export const startDomainlistRefetch = () => {
+  intervalId = BackgroundTimer.setInterval(fetchDomainlist, 5 * 60 * 60);
 };
 
-export const stopBlocklistRefetch = () => {
+export const stopDomainlistRefetch = () => {
   BackgroundTimer.clearInterval(intervalId);
 };
 ```
@@ -267,42 +259,67 @@ export default BlockScreen;
 
 ## API Reference
 
-### `BlowfishLocalBlocklist`
+### `SuietBlocklist`
 
 ### Constructor arguments
 
-- `apiConfig: ApiConfig`
-  - `basePath: string`: the URL for the domain blocklist. You can use it to pass API requests to a proxy that sits between your users and Blowfish API.
-  - `apiKey: string | undefined`: the API key for the Blowfish API. Can be `undefined` when using a proxy.
-- `blocklistConfig: BlocklistConfig`
-  - `priorityBlockLists: PriorityBlockListsEnum[] | undefined`: Always block domain if it present on one of these lists, even if it's allow-listed on one of regular allow lists (ex: `PHANTOM`, `BLOWFISH`, `BLOWFISH_AUTOMATED`, `SOLFARE`, `PHISHFORT`, `SCAMSNIFFER`, `METAMASK`)
-  - `priorityAllowLists: PriorityAllowListsEnum[] | undefined`: Override domain blocking if domain is present on one of these lists, even if it's block-listed on of regular block lists (ex: `BLOWFISH`, `METAMASK`, `DEFILLAMA`)
-  - `blockLists: BlockListsEnum[] | undefined`: Override domain blocking if domain is present on one of these lists, even if it's block-listed on of regular block lists (ex: `PHANTOM`, `BLOWFISH`, `BLOWFISH_AUTOMATED`, `SOLFARE`, `PHISHFORT`, `SCAMSNIFFER`, `METAMASK`)
-  - `allowLists: AllowListsEnum[] | undefined`: Override domain blocking if domain is present on one of these lists, even if it's block-listed on of regular block lists (ex: `BLOWFISH`, `METAMASK`, `DEFILLAMA`)
-  - `bloomFilterTtl?: number`: How long a bloom filter and corresponding `hash` should remain static. By default, 24 hours. Minimum 24 hours, maximum 14 days. During this time, new domains will be added to `recentlyAdded` and removed from `recentlyRemoved` fields.
-- `storage: BlowfishBlocklistStorage` If storage is not specified we use in-memory storage. It is highly encouraged to provide the proper storage for your environemnt ([see guides](#guides)).
-  - `getItem<T>(key: BlowfishBlocklistStorageKey): Promise<T | undefined>`: get item by key from the environment storage.
-  - `setItem(key: BlowfishBlocklistStorageKey, data: unknown)`: set item by key to the environment storage.
+- `storage: BlocklistStorage` If storage is not specified we use in-memory storage. It is highly encouraged to provide the proper storage for your environemnt ([see guides](#guides)).
+  - `getItem<T>(key: BlocklistStorageKey): Promise<T | undefined>`: get item by key from the environment storage.
+  - `setItem(key: BlocklistStorageKey, data: unknown)`: set item by key to the environment storage.
 - `reportError: (error: unknown) => void`: A callback function that library uses to track errors when result is `null`. (optional)
 
 ### Methods
 
-### `fetchBlocklist(): Promise<LocalBlocklist | undefined>`
+### `fetchDomainlist(): Promise<void>`
 
-Fetches the blocklist metadata and saves it to the storage. If the fetched blocklist hash is different from one in the storage, it re-fetches the bloom filter and saves it to the storage.
-
-If the blocklist fetch fails, the method returns `undefined` and reports the error to `reportError`.
+Fetches the domainlist metadata and saves it to the storage. If the blocklist fetch fails, the method returns `undefined` and reports the error to `reportError`.
 
 ### `scanDomain(url: string): Promise<Action>`
 
-Scans a domain against the stored domain blocklist and returns the action to be taken (either `BLOCK` or `NONE`).
+Scans a domain against the stored domainlist and returns the action to be taken (either `BLOCK` or `NONE`).
 
-If there is no stored blocklist it fetches the blocklist using `fetchBlocklist` method and returns the resulting action.
+If there is no stored domainlist it fetches the blocklist using `fetchDomainlist` method and returns the resulting action.
 
 If the fetch fails, the method returns the action `NONE` and reports the error to `reportError`.
 
-### `allowDomainLocally(url: string): Promise<Action>`
+### `allowDomainLocally(url: string)`
 
 If the user wants to proceed to the blocked domain with an explicit action, the domain is added in the user allow list (locally in the storage).
 
-The `scanDomain` method will return `NONE` action for this domain even if it's in the blocklist.
+The `scanDomain` method will return `NONE` action for this domain even if it's in the domainlist.
+
+### `fetchPackagelist(): Promise<void>`
+
+Fetches the packagelist metadata and saves it to the storage. If the blocklist fetch fails, the method returns `undefined` and reports the error to `reportError`.
+
+### `scanPackage(url: string): Promise<Action>`
+
+Scans a package against the stored packagelist and returns the action to be taken (either `BLOCK` or `NONE`).
+
+If there is no stored packagelist it fetches the blocklist using `fetchPackagelist` method and returns the resulting action.
+
+If the fetch fails, the method returns the action `NONE` and reports the error to `reportError`.
+
+### `fetchObjectlist(): Promise<void>`
+
+Fetches the objectlist metadata and saves it to the storage. If the blocklist fetch fails, the method returns `undefined` and reports the error to `reportError`.
+
+### `scanObject(url: string): Promise<Action>`
+
+Scans a object against the stored objectlist and returns the action to be taken (either `BLOCK` or `NONE`).
+
+If there is no stored objectlist it fetches the blocklist using `fetchObjectlist` method and returns the resulting action.
+
+If the fetch fails, the method returns the action `NONE` and reports the error to `reportError`.
+
+### `fetchCoinlist(): Promise<void>`
+
+Fetches the coinlist metadata and saves it to the storage. If the blocklist fetch fails, the method returns `undefined` and reports the error to `reportError`.
+
+### `scanCoin(url: string): Promise<Action>`
+
+Scans a coin against the stored coinlist and returns the action to be taken (either `BLOCK` or `NONE`).
+
+If there is no stored coinlist it fetches the blocklist using `fetchCoinlist` method and returns the resulting action.
+
+If the fetch fails, the method returns the action `NONE` and reports the error to `reportError`.
