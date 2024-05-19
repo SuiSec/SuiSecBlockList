@@ -27,7 +27,7 @@ const logger =
       }
     : console.log;
 
-export class SuietBlocklist {
+export class SuisecBlocklist {
   constructor(
     private readonly storage: BlocklistStorage = new InMemoryStorage(),
     private readonly reportError: (err: unknown) => void = () => {

@@ -23,9 +23,9 @@ We recommend updating it every 5 minutes.
 ### Basic usage
 
 ```javascript
-import { SuietBlocklist } from "suisecblocklist";
+import { SuisecBlocklist } from "suisecblocklist";
 
-const blocklist = new SuietBlocklist();
+const blocklist = new SuisecBlocklist();
 
 // 1. Fetch the domainlist and persist it in the storage
 blocklist.fetchDomainlist();
@@ -43,7 +43,9 @@ if (action === Action.BLOCK) {
 // 4. Fetch the packjectlist and persist it in the storage, Once you have a packjectlist object saved, you can execute lookups
 blocklist.fetchPackagelist();
 
-const action = blocklist.scanPackject("0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4");
+const action = blocklist.scanPackject(
+  "0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4"
+);
 
 if (action === Action.BLOCK) {
   // block the packject
@@ -52,7 +54,9 @@ if (action === Action.BLOCK) {
 // 5. Fetch the objectlist and persist it in the storage, Once you have a objectlist object saved, you can execute lookups
 blocklist.fetchObjectlist();
 
-const action = blocklist.scanObject("0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4::my_hero::Hero");
+const action = blocklist.scanObject(
+  "0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4::my_hero::Hero"
+);
 
 if (action === Action.BLOCK) {
   // block the object
@@ -61,7 +65,9 @@ if (action === Action.BLOCK) {
 // 6. Fetch the coinlist and persist it in the storage, Once you have a coinlist object saved, you can execute lookups
 blocklist.fetchCoinlist();
 
-const action = blocklist.scanCoin("0x043a9bd4cd74f93e861b8a3138a373e726bb1f7bf8f4f38cde4872f0234ed20b::usdt::USDT");
+const action = blocklist.scanCoin(
+  "0x043a9bd4cd74f93e861b8a3138a373e726bb1f7bf8f4f38cde4872f0234ed20b::usdt::USDT"
+);
 
 if (action === Action.BLOCK) {
   // block the coin
@@ -72,7 +78,7 @@ if (action === Action.BLOCK) {
 
 Functions that depend on API an/or network can return `null` when I/O errors are encountered.
 
-If you would like to track errors, you can pass optional `reportError` callback to `SuietBlocklist` constructor.
+If you would like to track errors, you can pass optional `reportError` callback to `SuisecBlocklist` constructor.
 
 It could be called with an `Error` or with a string.
 
@@ -91,7 +97,7 @@ npm install suisecblocklist webextension-polyfill
 ```typescript
 // src/blocklist.ts
 import {
-  SuietBlocklist,
+  SuisecBlocklist,
   BlocklistStorageKey,
   BlocklistStorage,
 } from "suisecblocklist";
@@ -108,7 +114,7 @@ const storage: BlocklistStorage = {
   },
 };
 
-export const blocklist = new SuietBlocklist();
+export const blocklist = new SuisecBlocklist();
 export { Action } from "suisecblocklist";
 ```
 
@@ -173,7 +179,7 @@ npm install suisecblocklist react-native-async-storage react-native-background-t
 ```typescript
 // src/blocklist.ts
 import {
-  SuietBlocklist,
+  SuisecBlocklist,
   BlocklistStorageKey,
   BlocklistStorage,
 } from "suisecblocklist";
@@ -184,15 +190,12 @@ const storage: BlocklistStorage = {
     const data = await AsyncStorage.getItem(key);
     return data ? (JSON.parse(data) as T) : undefined;
   },
-  async setItem(
-    key: BlocklistStorageKey,
-    data: unknown
-  ): Promise<void> {
+  async setItem(key: BlocklistStorageKey, data: unknown): Promise<void> {
     await AsyncStorage.setItem(key, JSON.stringify(data));
   },
 };
 
-export const blocklist = new SuietBlocklist();
+export const blocklist = new SuisecBlocklist();
 export { Action } from "suisecblocklist";
 ```
 
@@ -259,7 +262,7 @@ export default BlockScreen;
 
 ## API Reference
 
-### `SuietBlocklist`
+### `SuisecBlocklist`
 
 ### Constructor arguments
 

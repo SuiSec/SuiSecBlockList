@@ -24,4 +24,4 @@ export {
   DEFAULT_OBJECT_URL,
 } from "./utils";
 
-export { SuietBlocklist } from "./SuietBlocklist";
+export { SuisecBlocklist } from "./SuisecBlocklist";
