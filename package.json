@@ -1,16 +1,40 @@
 {
+  "type": "module",
   "name": "suisecblocklist",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Fetch and execute lookups on Suiet Guardians blocklists",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ],
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsup src/index.ts --format cjs,esm --dts --clean --env.NODE_ENV production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RandyPen/SuiSecBlockList.git"
+  },
+  "homepage": "https://github.com/RandyPen/SuiSecBlockList#readme",
   "keywords": [],
-  "author": "",
+  "author": "SuiSec team",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@types/node": "^20.12.12",
     "ts-node": "^10.9.2",
