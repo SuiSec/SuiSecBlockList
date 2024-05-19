@@ -1,5 +1,11 @@
 import fetch from "cross-fetch";
-import { Action, DomainBlocklist } from "./types";
+import {
+  Action,
+  DomainBlocklist,
+  PackageBlocklist,
+  ObjectBlocklist,
+  CoinBlocklist,
+} from "./types";
 
 export const DEFAULT_BLOCKLIST_URL =
   "https://raw.githubusercontent.com/suiet/guardians/main/src/domain-list.json";
@@ -73,3 +79,114 @@ export const withRetry = async <T>(
     return withRetry(action, times - 1);
   }
 };
+
+export async function fetchPackageBlocklist(
+  reportError: ErrorCallback | undefined = undefined
+): Promise<PackageBlocklist | null> {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  try {
+    // We wrap errors with a null so any downtime won't break user's browsing flow.
+    const response = await fetcher(DEFAULT_PACKAGE_URL, {
+      method: "GET",
+      ...headers,
+    });
+    if (!response.ok) {
+      if (reportError) {
+        reportError(await response.text());
+      }
+      return null;
+    }
+    // Catch JSON decoding errors too.
+    return (await response.json()) as PackageBlocklist;
+  } catch (error: unknown) {
+    if (reportError) {
+      reportError(error);
+    }
+    return null;
+  }
+}
+
+export function scanPackage(packagelist: string[], address: string): Action {
+  if (packagelist.includes(address)) {
+    return Action.BLOCK;
+  }
+
+  return Action.NONE;
+}
+
+export async function fetchObjectBlocklist(
+  reportError: ErrorCallback | undefined = undefined
+): Promise<ObjectBlocklist | null> {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  try {
+    // We wrap errors with a null so any downtime won't break user's browsing flow.
+    const response = await fetcher(DEFAULT_OBJECT_URL, {
+      method: "GET",
+      ...headers,
+    });
+    if (!response.ok) {
+      if (reportError) {
+        reportError(await response.text());
+      }
+      return null;
+    }
+    // Catch JSON decoding errors too.
+    return (await response.json()) as ObjectBlocklist;
+  } catch (error: unknown) {
+    if (reportError) {
+      reportError(error);
+    }
+    return null;
+  }
+}
+
+export function scanObject(objectlist: string[], object: string): Action {
+  if (objectlist.includes(object)) {
+    return Action.BLOCK;
+  }
+
+  return Action.NONE;
+}
+
+export async function fetchCoinBlocklist(
+  reportError: ErrorCallback | undefined = undefined
+): Promise<CoinBlocklist | null> {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  try {
+    // We wrap errors with a null so any downtime won't break user's browsing flow.
+    const response = await fetcher(DEFAULT_COIN_URL, {
+      method: "GET",
+      ...headers,
+    });
+    if (!response.ok) {
+      if (reportError) {
+        reportError(await response.text());
+      }
+      return null;
+    }
+    // Catch JSON decoding errors too.
+    return (await response.json()) as CoinBlocklist;
+  } catch (error: unknown) {
+    if (reportError) {
+      reportError(error);
+    }
+    return null;
+  }
+}
+
+export function scanCoin(coinlist: string[], coin: string): Action {
+  if (coinlist.includes(coin)) {
+    return Action.BLOCK;
+  }
+
+  return Action.NONE;
+}

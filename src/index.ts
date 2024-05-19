@@ -1,18 +1,27 @@
 export {
   Action,
   DomainBlocklist,
+  PackageBlocklist,
+  ObjectBlocklist,
+  CoinBlocklist,
   BlocklistStorage,
   BlocklistStorageKey,
   ErrorCallback,
 } from "./types";
 
-export { SuietBlocklist } from "./SuietBlocklist";
-
 export {
   scanDomain,
   fetchDomainBlocklist,
+  scanPackage,
+  fetchPackageBlocklist,
+  scanObject,
+  fetchObjectBlocklist,
+  scanCoin,
+  fetchCoinBlocklist,
   DEFAULT_BLOCKLIST_URL,
   DEFAULT_COIN_URL,
   DEFAULT_PACKAGE_URL,
   DEFAULT_OBJECT_URL,
 } from "./utils";
+
+export { SuietBlocklist } from "./SuietBlocklist";
