@@ -23,9 +23,9 @@ We recommend updating it every 5 minutes.
 ### Basic usage
 
 ```javascript
-import { SuisecBlocklist } from "suisecblocklist";
+import { SuiSecBlocklist } from "suisecblocklist";
 
-const blocklist = new SuisecBlocklist();
+const blocklist = new SuiSecBlocklist();
 
 // 1. Fetch the domainlist and persist it in the storage
 blocklist.fetchDomainlist();
@@ -78,7 +78,7 @@ if (action === Action.BLOCK) {
 
 Functions that depend on API an/or network can return `null` when I/O errors are encountered.
 
-If you would like to track errors, you can pass optional `reportError` callback to `SuisecBlocklist` constructor.
+If you would like to track errors, you can pass optional `reportError` callback to `SuiSecBlocklist` constructor.
 
 It could be called with an `Error` or with a string.
 
@@ -97,7 +97,7 @@ npm install suisecblocklist webextension-polyfill
 ```typescript
 // src/blocklist.ts
 import {
-  SuisecBlocklist,
+  SuiSecBlocklist,
   BlocklistStorageKey,
   BlocklistStorage,
 } from "suisecblocklist";
@@ -114,7 +114,7 @@ const storage: BlocklistStorage = {
   },
 };
 
-export const blocklist = new SuisecBlocklist();
+export const blocklist = new SuiSecBlocklist();
 export { Action } from "suisecblocklist";
 ```
 
@@ -179,7 +179,7 @@ npm install suisecblocklist react-native-async-storage react-native-background-t
 ```typescript
 // src/blocklist.ts
 import {
-  SuisecBlocklist,
+  SuiSecBlocklist,
   BlocklistStorageKey,
   BlocklistStorage,
 } from "suisecblocklist";
@@ -195,7 +195,7 @@ const storage: BlocklistStorage = {
   },
 };
 
-export const blocklist = new SuisecBlocklist();
+export const blocklist = new SuiSecBlocklist();
 export { Action } from "suisecblocklist";
 ```
 
@@ -262,7 +262,7 @@ export default BlockScreen;
 
 ## API Reference
 
-### `SuisecBlocklist`
+### `SuiSecBlocklist`
 
 ### Constructor arguments
 
