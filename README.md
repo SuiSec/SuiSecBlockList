@@ -55,7 +55,7 @@ blocklist.fetchObjectlist();
 const action = blocklist.scanObject("0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4::my_hero::Hero");
 
 if (action === Action.BLOCK) {
-  // block the domain
+  // block the object
 }
 
 // 6. Fetch the coinlist and persist it in the storage, Once you have a coinlist object saved, you can execute lookups
