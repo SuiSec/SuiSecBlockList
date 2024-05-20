@@ -43,7 +43,7 @@ if (action === Action.BLOCK) {
 // 4. Fetch the packjectlist and persist it in the storage, Once you have a packjectlist object saved, you can execute lookups
 blocklist.fetchPackagelist();
 
-const action = blocklist.scanPackject(
+const action = blocklist.scanPackage(
   "0x13530eb10a4ffe6396d7acc8499f2b3fba7c18ac38f88570fae51823f6a203b4"
 );
 
