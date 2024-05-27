@@ -114,7 +114,7 @@ const storage: BlocklistStorage = {
   },
 };
 
-export const blocklist = new SuiSecBlocklist();
+export const blocklist = new SuiSecBlocklist(storage);
 export { Action } from "suisecblocklist";
 ```
 
@@ -195,7 +195,7 @@ const storage: BlocklistStorage = {
   },
 };
 
-export const blocklist = new SuiSecBlocklist();
+export const blocklist = new SuiSecBlocklist(storage);
 export { Action } from "suisecblocklist";
 ```
 
