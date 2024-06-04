@@ -1,10 +1,10 @@
 import fetch from "cross-fetch";
 import {
   Action,
-  DomainBlocklist,
-  PackageBlocklist,
-  ObjectBlocklist,
   CoinBlocklist,
+  DomainBlocklist,
+  ObjectBlocklist,
+  PackageBlocklist,
 } from "./types";
 
 export const DEFAULT_BLOCKLIST_URL =
@@ -18,14 +18,25 @@ export const DEFAULT_OBJECT_URL =
 
 export type ErrorCallback = (error: unknown) => void;
 
+interface DomainMap {
+  [key: string]: string;
+}
+
+const domainMap: DomainMap = {
+  "scallop": "scallop.io",
+  "navi": "naviprotocol.io",
+  "suilend": "suilend.fi",
+};
+
 // Use native fetch where supported
 // cross-fetch doesn't support workers (https://github.com/lquixada/cross-fetch/issues/78)
-export const fetcher =
-  typeof self !== "undefined" && !!self.fetch ? self.fetch : fetch;
+export const fetcher = typeof self !== "undefined" && !!self.fetch
+  ? self.fetch
+  : fetch;
 
 // recent domains every 5 minutes.
 export async function fetchDomainBlocklist(
-  reportError: ErrorCallback | undefined = undefined
+  reportError: ErrorCallback | undefined = undefined,
 ): Promise<DomainBlocklist | null> {
   const headers = {
     "Content-Type": "application/json",
@@ -63,12 +74,20 @@ export function scanDomain(blocklist: string[], url: string): Action {
       return Action.BLOCK;
     }
   }
+
+  for (const key in domainMap) {
+    if (url.includes(key)) {
+      if (domain !== domainMap[key]) {
+        return Action.BLOCK;
+      }
+    }
+  }
   return Action.NONE;
 }
 
 export const withRetry = async <T>(
   action: () => Promise<T>,
-  times = 3
+  times = 3,
 ): Promise<T> => {
   try {
     return action();
@@ -81,7 +100,7 @@ export const withRetry = async <T>(
 };
 
 export async function fetchPackageBlocklist(
-  reportError: ErrorCallback | undefined = undefined
+  reportError: ErrorCallback | undefined = undefined,
 ): Promise<PackageBlocklist | null> {
   const headers = {
     "Content-Type": "application/json",
@@ -118,7 +137,7 @@ export function scanPackage(packagelist: string[], address: string): Action {
 }
 
 export async function fetchObjectBlocklist(
-  reportError: ErrorCallback | undefined = undefined
+  reportError: ErrorCallback | undefined = undefined,
 ): Promise<ObjectBlocklist | null> {
   const headers = {
     "Content-Type": "application/json",
@@ -155,7 +174,7 @@ export function scanObject(objectlist: string[], object: string): Action {
 }
 
 export async function fetchCoinBlocklist(
-  reportError: ErrorCallback | undefined = undefined
+  reportError: ErrorCallback | undefined = undefined,
 ): Promise<CoinBlocklist | null> {
   const headers = {
     "Content-Type": "application/json",
