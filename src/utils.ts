@@ -77,7 +77,7 @@ export function scanDomain(blocklist: string[], url: string): Action {
   }
 
   for (const key in domainMap) {
-    if (url.includes(key)) {
+    if (domain.includes(key)) {
       if (domain !== domainMap[key]) {
         return Action.BLOCK;
       }
