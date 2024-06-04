@@ -25,6 +25,7 @@ interface DomainMap {
 const domainMap: DomainMap = {
   "scallop": "scallop.io",
   "navi": "naviprotocol.io",
+  "navx": "naviprotocol.io",
   "suilend": "suilend.fi",
 };
 
