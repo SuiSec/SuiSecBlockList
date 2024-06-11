@@ -74,6 +74,11 @@ if (action === Action.BLOCK) {
 }
 ```
 
+#### Example code
+- [scanCoin](./example/scanCoin.ts)
+- [scanNFT](./example/scanNFT.ts)
+- [scanPackage](./example/scanPackage.ts)
+
 ### Error handling
 
 Functions that depend on API an/or network can return `null` when I/O errors are encountered.
