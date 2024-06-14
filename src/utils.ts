@@ -23,10 +23,13 @@ interface DomainMap {
 }
 
 const domainMap: DomainMap = {
+  "cetus": "cetus.zone",
   "scallop": "scallop.io",
   "navi": "naviprotocol.io",
   "navx": "naviprotocol.io",
   "suilend": "suilend.fi",
+  "bucket": "bucketprotocol.io",
+  "turbos": "turbos.finance",
 };
 
 // Use native fetch where supported
