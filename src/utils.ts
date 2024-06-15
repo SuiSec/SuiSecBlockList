@@ -32,7 +32,11 @@ const domainMap: DomainMap = {
   "turbos": "turbos.finance",
   "flowx": "flowx.finance",
   "kriya": "kriya.finance",
+  "typus": "typus.finance",
+  "aftermath": "aftermath.finance",
   "bluefin": "bluefin.io",
+  "haedal": "haedal.xyz",
+  "volo": "volosui.com",
 };
 
 // Use native fetch where supported
