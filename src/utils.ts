@@ -30,6 +30,9 @@ const domainMap: DomainMap = {
   "suilend": "suilend.fi",
   "bucket": "bucketprotocol.io",
   "turbos": "turbos.finance",
+  "flowx": "flowx.finance",
+  "kriya": "kriya.finance",
+  "bluefin": "bluefin.io",
 };
 
 // Use native fetch where supported
