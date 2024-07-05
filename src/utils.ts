@@ -37,6 +37,7 @@ const domainMap: DomainMap = {
   "bluefin": "bluefin.io",
   "haedal": "haedal.xyz",
   "volo": "volosui.com",
+  "alphafi": "alphafi.xyz",
 };
 
 // Use native fetch where supported
