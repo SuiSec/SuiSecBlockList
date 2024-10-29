@@ -90,7 +90,7 @@ export function scanDomain(blocklist: string[], url: string): Action {
 
   for (const key in domainMap) {
     if (domain.includes(key)) {
-      if (domain !== domainMap[key]) {
+      if (!domain.endsWith(domainMap[key].toLowerCase())) {
         return Action.BLOCK;
       }
     }
