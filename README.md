@@ -78,6 +78,7 @@ if (action === Action.BLOCK) {
 - [scanCoin](./example/scanCoin.ts)
 - [scanNFT](./example/scanNFT.ts)
 - [scanPackage](./example/scanPackage.ts)
+- [scanDomain](./example/scanDomain.ts)
 
 ### Error handling
 

@@ -90,7 +90,12 @@ export function scanDomain(blocklist: string[], url: string): Action {
 
   for (const key in domainMap) {
     if (domain.includes(key)) {
-      if (domain !== domainMap[key]) {
+      let whitelistDomain = domainMap[key].toLowerCase();
+      if (domainParts.length == whitelistDomain.split(".").length){
+        //scam-aaa.com
+        return domain !== whitelistDomain ? Action.BLOCK : Action.NONE;
+      } else if (!domain.endsWith(`.${whitelistDomain}`)) {
+        //app.scam-aaa.com
         return Action.BLOCK;
       }
     }
