@@ -78,13 +78,25 @@ export async function fetchDomainBlocklist(
 }
 
 export function scanDomain(blocklist: string[], url: string): Action {
-  const domain = new URL(url).hostname.toLowerCase();
+  // parse domain of https://example.com or http://example.com  or example.com , then domain is example.com
+  const domain = url.startsWith("http")? new URL(url).hostname.toLowerCase(): url.toLowerCase();
   const domainParts = domain.split(".");
 
   for (let i = 0; i < domainParts.length - 1; i++) {
     const domainToLookup = domainParts.slice(i).join(".");
     if (blocklist.includes(domainToLookup)) {
       return Action.BLOCK;
+    }
+  }
+
+  for (const key in domainMap) {
+    let whitelistDomain = domainMap[key].toLowerCase();
+    let whitelistDomainParts = whitelistDomain.split(".");
+
+    let slice = domainParts.slice(-whitelistDomainParts.length);
+    //https://deepbook.cetus.zone is NOT-BLOCK
+    if(slice.join('.') === whitelistDomain){
+      return Action.NONE;
     }
   }
 
