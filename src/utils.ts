@@ -78,8 +78,9 @@ export async function fetchDomainBlocklist(
 }
 
 export function scanDomain(blocklist: string[], url: string): Action {
+  url =url.trim();
   // parse domain of https://example.com or http://example.com  or example.com , then domain is example.com
-  const domain = url.startsWith("http")? new URL(url).hostname.toLowerCase(): url.toLowerCase();
+  const domain = url.toLowerCase().startsWith("http")? new URL(url).hostname.toLowerCase():  new URL(`https://${url}`).hostname.toLowerCase();
   const domainParts = domain.split(".");
 
   for (let i = 0; i < domainParts.length - 1; i++) {

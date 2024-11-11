@@ -66,6 +66,8 @@ export class SuiSecBlocklist {
   }
 
   async scanDomain(url: string): Promise<Action> {
+    url =url.trim();
+    url = url.toLowerCase().startsWith("http") ? url: `https://${url}`;
     logger("scanDomain start");
     let storedDomainBlocklist = await this.storage.getItem<DomainBlocklist>(
       BlocklistStorageKey.DomainBlocklist
