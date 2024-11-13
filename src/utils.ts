@@ -39,6 +39,7 @@ const domainMap: DomainMap = {
   "volo": "volosui.com",
   "alphafi": "alphafi.xyz",
   "deepbook": "deepbook.tech",
+  "suins": "suins.io",
 };
 
 // Use native fetch where supported
