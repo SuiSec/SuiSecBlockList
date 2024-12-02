@@ -8,13 +8,13 @@ import {
 } from "./types";
 
 export const DEFAULT_BLOCKLIST_URL =
-  "https://raw.githubusercontent.com/suiet/guardians/main/src/domain-list.json";
+  "https://raw.githubusercontent.com/suiet/guardians/main/dist/domain-list.json";
 export const DEFAULT_COIN_URL =
-  "https://raw.githubusercontent.com/suiet/guardians/main/src/coin-list.json";
+  "https://raw.githubusercontent.com/suiet/guardians/main/dist/coin-list.json";
 export const DEFAULT_PACKAGE_URL =
-  "https://raw.githubusercontent.com/suiet/guardians/main/src/package-list.json";
+  "https://raw.githubusercontent.com/suiet/guardians/main/dist/package-list.json";
 export const DEFAULT_OBJECT_URL =
-  "https://raw.githubusercontent.com/suiet/guardians/main/src/object-list.json";
+  "https://raw.githubusercontent.com/suiet/guardians/main/dist/object-list.json";
 
 export type ErrorCallback = (error: unknown) => void;
 
@@ -41,6 +41,8 @@ const domainMap: DomainMap = {
   "alphafi": "alphafi.xyz",
   "deepbook": "deepbook.tech",
   "suins": "suins.io",
+  "suilink": "suilink.io",
+  "sui": "sui.io",
 };
 
 // Use native fetch where supported
