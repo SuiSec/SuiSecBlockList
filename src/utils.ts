@@ -81,7 +81,7 @@ export async function fetchDomainBlocklist(
   }
 }
 
-export function scanDomain(blocklist: string[], url: string): Action {
+export function scanDomain(suiseclist: DomainBlocklist, url: string): Action {
   url =url.trim();
   // parse domain of https://example.com or http://example.com  or example.com , then domain is example.com
   const domain = url.toLowerCase().startsWith("http")? new URL(url).hostname.toLowerCase():  new URL(`https://${url}`).hostname.toLowerCase();
@@ -89,7 +89,10 @@ export function scanDomain(blocklist: string[], url: string): Action {
 
   for (let i = 0; i < domainParts.length - 1; i++) {
     const domainToLookup = domainParts.slice(i).join(".");
-    if (blocklist.includes(domainToLookup)) {
+    if (suiseclist.allowlist.includes(domainToLookup)) {
+        return Action.NONE;
+    }
+    if (suiseclist.blocklist.includes(domainToLookup)) {
       return Action.BLOCK;
     }
   }

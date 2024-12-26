@@ -90,7 +90,7 @@ export class SuiSecBlocklist {
       return Action.NONE;
     }
 
-    const action = scanDomain(storedDomainBlocklist.blocklist, url);
+    const action = scanDomain(storedDomainBlocklist, url);
 
     if (action === Action.BLOCK) {
       logger("scanDomain BLOCK");

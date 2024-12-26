@@ -93,3 +93,4 @@ web_modules/
 .pnp.*
 
 .DS_Store
+bun.lockb
