@@ -203,8 +203,11 @@ export async function fetchObjectBlocklist(
   }
 }
 
-export function scanObject(objectlist: string[], object: string): Action {
-  if (objectlist.includes(object)) {
+export function scanObject(objectlist: ObjectBlocklist, object: string): Action {
+  if (objectlist.allowlist.includes(object)) {
+    return Action.NONE;
+  }
+  if (objectlist.blocklist.includes(object)) {
     return Action.BLOCK;
   }
 

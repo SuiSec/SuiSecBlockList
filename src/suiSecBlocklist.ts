@@ -199,7 +199,7 @@ export class SuiSecBlocklist {
       return Action.NONE;
     }
 
-    const action = scanObject(storedObjectBlocklist.blocklist, object);
+    const action = scanObject(storedObjectBlocklist, object);
 
     logger("scanObject action", action);
 
