@@ -40,7 +40,7 @@ if (action === Action.BLOCK) {
   // block the domain
 }
 
-// 4. Fetch the packjectlist and persist it in the storage, Once you have a packjectlist object saved, you can execute lookups
+// 4. Fetch the package list and persist it in the storage, Once you have a package list object saved, you can execute lookups
 blocklist.fetchPackagelist();
 
 const action = blocklist.scanPackage(
@@ -48,7 +48,7 @@ const action = blocklist.scanPackage(
 );
 
 if (action === Action.BLOCK) {
-  // block the packject
+  // block the package
 }
 
 // 5. Fetch the objectlist and persist it in the storage, Once you have a objectlist object saved, you can execute lookups
