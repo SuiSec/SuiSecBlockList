@@ -7,14 +7,30 @@ import {
   PackageBlocklist,
 } from "./types";
 
-export const DEFAULT_BLOCKLIST_URL =
+export const GUARDIANS_BLOCKLIST_URL =
   "https://raw.githubusercontent.com/suiet/guardians/main/dist/domain-list.json";
-export const DEFAULT_COIN_URL =
+export const GUARDIANS_COIN_URL =
   "https://raw.githubusercontent.com/suiet/guardians/main/dist/coin-list.json";
-export const DEFAULT_PACKAGE_URL =
+export const GUARDIANS_PACKAGE_URL =
   "https://raw.githubusercontent.com/suiet/guardians/main/dist/package-list.json";
-export const DEFAULT_OBJECT_URL =
+export const GUARDIANS_OBJECT_URL =
   "https://raw.githubusercontent.com/suiet/guardians/main/dist/object-list.json";
+export const MYSTEN_DOMAIN_ALLOWLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/allowlists/domain-list.json";
+export const MYSTEN_COIN_ALLOWLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/allowlists/coin-list.json";
+export const MYSTEN_PACKAGE_ALLOWLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/allowlists/package-list.json";
+export const MYSTEN_OBJECT_ALLOWLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/allowlists/object-list.json";
+export const MYSTEN_DOMAIN_BLOCKLIST_URL =
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/blocklists/domain-list.json";
+export const MYSTEN_COIN_BLOCKLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/blocklists/coin-list.json";
+export const MYSTEN_PACKAGE_BLOCKLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/blocklists/package-list.json";
+export const MYSTEN_OBJECT_BLOCKLIST_URL = 
+  "https://raw.githubusercontent.com/MystenLabs/wallet_blocklist/refs/heads/main/blocklists/object-list.json";
 
 export type ErrorCallback = (error: unknown) => void;
 
@@ -61,18 +77,37 @@ export async function fetchDomainBlocklist(
 
   try {
     // We wrap errors with a null so any downtime won't break user's browsing flow.
-    const response = await fetcher(DEFAULT_BLOCKLIST_URL, {
-      method: "GET",
-      ...headers,
-    });
-    if (!response.ok) {
+    const [guardiansResponse, mystenAllowResponse, mystenBlockResponse] = await Promise.all([
+        fetcher(GUARDIANS_BLOCKLIST_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_DOMAIN_ALLOWLIST_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_DOMAIN_BLOCKLIST_URL, { method: "GET", ...headers }),
+    ]);
+    if (!guardiansResponse.ok || !mystenAllowResponse.ok || !mystenBlockResponse.ok) {
       if (reportError) {
-        reportError(await response.text());
+        const errorMessages = [];
+        if (!guardiansResponse.ok) errorMessages.push(await guardiansResponse.text());
+        if (!mystenAllowResponse.ok) errorMessages.push(await mystenAllowResponse.text());
+        if (!mystenBlockResponse.ok) errorMessages.push(await mystenBlockResponse.text());
+        reportError(errorMessages.join("\n"));
       }
       return null;
     }
+    const guardiansBlocklist = await guardiansResponse.json();
+    const mystenAllowlist = await mystenAllowResponse.json();
+    const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
-    return (await response.json()) as DomainBlocklist;
+    const combinedBlocklist: DomainBlocklist = {
+        allowlist: [
+          ...guardiansBlocklist.allowlist,
+          ...mystenAllowlist.allowlist,
+          ...mystenBlocklist.allowlist,
+        ],
+        blocklist: [
+          ...guardiansBlocklist.blocklist,
+          ...mystenBlocklist.blocklist,
+        ],
+    };
+    return combinedBlocklist;
   } catch (error: unknown) {
     if (reportError) {
       reportError(error);
@@ -146,18 +181,37 @@ export async function fetchPackageBlocklist(
 
   try {
     // We wrap errors with a null so any downtime won't break user's browsing flow.
-    const response = await fetcher(DEFAULT_PACKAGE_URL, {
-      method: "GET",
-      ...headers,
-    });
-    if (!response.ok) {
+    const [guardiansResponse, mystenAllowResponse, mystenBlockResponse] = await Promise.all([
+        fetcher(GUARDIANS_PACKAGE_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_PACKAGE_ALLOWLIST_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_PACKAGE_BLOCKLIST_URL, { method: "GET", ...headers }),
+    ]);
+    if (!guardiansResponse.ok || !mystenAllowResponse.ok || !mystenBlockResponse.ok) {
       if (reportError) {
-        reportError(await response.text());
+        const errorMessages = [];
+        if (!guardiansResponse.ok) errorMessages.push(await guardiansResponse.text());
+        if (!mystenAllowResponse.ok) errorMessages.push(await mystenAllowResponse.text());
+        if (!mystenBlockResponse.ok) errorMessages.push(await mystenBlockResponse.text());
+        reportError(errorMessages.join("\n"));
       }
       return null;
     }
+    const guardiansBlocklist = await guardiansResponse.json();
+    const mystenAllowlist = await mystenAllowResponse.json();
+    const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
-    return (await response.json()) as PackageBlocklist;
+    const combinedBlocklist: PackageBlocklist = {
+        allowlist: [
+          ...guardiansBlocklist.allowlist,
+          ...mystenAllowlist.allowlist,
+          ...mystenBlocklist.allowlist,
+        ],
+        blocklist: [
+          ...guardiansBlocklist.blocklist,
+          ...mystenBlocklist.blocklist,
+        ],
+    };
+    return combinedBlocklist;
   } catch (error: unknown) {
     if (reportError) {
       reportError(error);
@@ -183,18 +237,37 @@ export async function fetchObjectBlocklist(
 
   try {
     // We wrap errors with a null so any downtime won't break user's browsing flow.
-    const response = await fetcher(DEFAULT_OBJECT_URL, {
-      method: "GET",
-      ...headers,
-    });
-    if (!response.ok) {
+    const [guardiansResponse, mystenAllowResponse, mystenBlockResponse] = await Promise.all([
+        fetcher(GUARDIANS_OBJECT_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_OBJECT_ALLOWLIST_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_OBJECT_BLOCKLIST_URL, { method: "GET", ...headers }),
+    ]);
+    if (!guardiansResponse.ok || !mystenAllowResponse.ok || !mystenBlockResponse.ok) {
       if (reportError) {
-        reportError(await response.text());
+        const errorMessages = [];
+        if (!guardiansResponse.ok) errorMessages.push(await guardiansResponse.text());
+        if (!mystenAllowResponse.ok) errorMessages.push(await mystenAllowResponse.text());
+        if (!mystenBlockResponse.ok) errorMessages.push(await mystenBlockResponse.text());
+        reportError(errorMessages.join("\n"));
       }
       return null;
     }
+    const guardiansBlocklist = await guardiansResponse.json();
+    const mystenAllowlist = await mystenAllowResponse.json();
+    const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
-    return (await response.json()) as ObjectBlocklist;
+    const combinedBlocklist: ObjectBlocklist = {
+        allowlist: [
+          ...guardiansBlocklist.allowlist,
+          ...mystenAllowlist.allowlist,
+          ...mystenBlocklist.allowlist,
+        ],
+        blocklist: [
+          ...guardiansBlocklist.blocklist,
+          ...mystenBlocklist.blocklist,
+        ],
+    };
+    return combinedBlocklist;
   } catch (error: unknown) {
     if (reportError) {
       reportError(error);
@@ -223,18 +296,37 @@ export async function fetchCoinBlocklist(
 
   try {
     // We wrap errors with a null so any downtime won't break user's browsing flow.
-    const response = await fetcher(DEFAULT_COIN_URL, {
-      method: "GET",
-      ...headers,
-    });
-    if (!response.ok) {
+    const [guardiansResponse, mystenAllowResponse, mystenBlockResponse] = await Promise.all([
+        fetcher(GUARDIANS_COIN_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_COIN_ALLOWLIST_URL, { method: "GET", ...headers }),
+        fetcher(MYSTEN_COIN_BLOCKLIST_URL, { method: "GET", ...headers }),
+    ]);
+    if (!guardiansResponse.ok || !mystenAllowResponse.ok || !mystenBlockResponse.ok) {
       if (reportError) {
-        reportError(await response.text());
+        const errorMessages = [];
+        if (!guardiansResponse.ok) errorMessages.push(await guardiansResponse.text());
+        if (!mystenAllowResponse.ok) errorMessages.push(await mystenAllowResponse.text());
+        if (!mystenBlockResponse.ok) errorMessages.push(await mystenBlockResponse.text());
+        reportError(errorMessages.join("\n"));
       }
       return null;
     }
+    const guardiansBlocklist = await guardiansResponse.json();
+    const mystenAllowlist = await mystenAllowResponse.json();
+    const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
-    return (await response.json()) as CoinBlocklist;
+    const combinedBlocklist: CoinBlocklist = {
+        allowlist: [
+          ...guardiansBlocklist.allowlist,
+          ...mystenAllowlist.allowlist,
+          ...mystenBlocklist.allowlist,
+        ],
+        blocklist: [
+          ...guardiansBlocklist.blocklist,
+          ...mystenBlocklist.blocklist,
+        ],
+    };
+    return combinedBlocklist;
   } catch (error: unknown) {
     if (reportError) {
       reportError(error);
