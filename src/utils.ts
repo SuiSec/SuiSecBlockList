@@ -96,15 +96,20 @@ export async function fetchDomainBlocklist(
     const mystenAllowlist = await mystenAllowResponse.json();
     const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
+    // Combine and deduplicate allowlist and blocklist
     const combinedBlocklist: DomainBlocklist = {
         allowlist: [
-          ...guardiansBlocklist.allowlist,
-          ...mystenAllowlist.allowlist,
-          ...mystenBlocklist.allowlist,
+            ...new Set([
+            ...guardiansBlocklist.allowlist,
+            ...mystenAllowlist.allowlist,
+            ...mystenBlocklist.allowlist,
+            ]),
         ],
         blocklist: [
-          ...guardiansBlocklist.blocklist,
-          ...mystenBlocklist.blocklist,
+            ...new Set([
+            ...guardiansBlocklist.blocklist,
+            ...mystenBlocklist.blocklist,
+            ]),
         ],
     };
     return combinedBlocklist;
@@ -200,15 +205,20 @@ export async function fetchPackageBlocklist(
     const mystenAllowlist = await mystenAllowResponse.json();
     const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
+    // Combine and deduplicate allowlist and blocklist
     const combinedBlocklist: PackageBlocklist = {
         allowlist: [
-          ...guardiansBlocklist.allowlist,
-          ...mystenAllowlist.allowlist,
-          ...mystenBlocklist.allowlist,
+            ...new Set([
+            ...guardiansBlocklist.allowlist,
+            ...mystenAllowlist.allowlist,
+            ...mystenBlocklist.allowlist,
+            ]),
         ],
         blocklist: [
-          ...guardiansBlocklist.blocklist,
-          ...mystenBlocklist.blocklist,
+            ...new Set([
+            ...guardiansBlocklist.blocklist,
+            ...mystenBlocklist.blocklist,
+            ]),
         ],
     };
     return combinedBlocklist;
@@ -256,15 +266,20 @@ export async function fetchObjectBlocklist(
     const mystenAllowlist = await mystenAllowResponse.json();
     const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
+    // Combine and deduplicate allowlist and blocklist
     const combinedBlocklist: ObjectBlocklist = {
         allowlist: [
-          ...guardiansBlocklist.allowlist,
-          ...mystenAllowlist.allowlist,
-          ...mystenBlocklist.allowlist,
+            ...new Set([
+            ...guardiansBlocklist.allowlist,
+            ...mystenAllowlist.allowlist,
+            ...mystenBlocklist.allowlist,
+            ]),
         ],
         blocklist: [
-          ...guardiansBlocklist.blocklist,
-          ...mystenBlocklist.blocklist,
+            ...new Set([
+            ...guardiansBlocklist.blocklist,
+            ...mystenBlocklist.blocklist,
+            ]),
         ],
     };
     return combinedBlocklist;
@@ -315,15 +330,20 @@ export async function fetchCoinBlocklist(
     const mystenAllowlist = await mystenAllowResponse.json();
     const mystenBlocklist = await mystenBlockResponse.json();
     // Catch JSON decoding errors too.
+    // Combine and deduplicate allowlist and blocklist
     const combinedBlocklist: CoinBlocklist = {
         allowlist: [
-          ...guardiansBlocklist.allowlist,
-          ...mystenAllowlist.allowlist,
-          ...mystenBlocklist.allowlist,
+            ...new Set([
+            ...guardiansBlocklist.allowlist,
+            ...mystenAllowlist.allowlist,
+            ...mystenBlocklist.allowlist,
+            ]),
         ],
         blocklist: [
-          ...guardiansBlocklist.blocklist,
-          ...mystenBlocklist.blocklist,
+            ...new Set([
+            ...guardiansBlocklist.blocklist,
+            ...mystenBlocklist.blocklist,
+            ]),
         ],
     };
     return combinedBlocklist;
